@@ -1,101 +1,117 @@
-import Image from "next/image";
+'use client';
+import { Button } from "../components/ui/button"; // Assuming you have a Button component
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [activeTab, setActiveTab] = useState("menu");
+  interface MenuItem {
+    product_id: number;
+    product_name: string;
+    description: string;
+    price: number;
+  }
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  interface Table {
+    table_num: number;
+    status: string;
+    seats: number;
+  }
+
+  interface BillItem {
+    id: number;
+    product_name: string;
+    price: number;
+  }
+
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [tables, setTables] = useState<Table[]>([]);
+  const [billItems, setBillItems] = useState<BillItem[]>([]);
+
+  // Fetch menu data
+  useEffect(() => {
+    if (activeTab === "menu") {
+      fetch("/api/menu")
+        .then((res) => res.json())
+        .then((data) => setMenuItems(data))
+        .catch((err) => console.error("Error fetching menu:", err));
+    } else if (activeTab === "tables") {
+      fetch("/api/tables")
+        .then((res) => res.json())
+        .then((data) => setTables(data))
+        .catch((err) => console.error("Error fetching tables:", err));
+    } else if (activeTab === "bill") {
+      fetch("/api/bill")
+        .then((res) => res.json())
+        .then((data) => setBillItems(data))
+        .catch((err) => console.error("Error fetching bill:", err));
+    }
+  }, [activeTab]); // Re-fetch when the active tab changes
+
+  return (
+    <div className="flex h-screen">
+      {/* Navigation Section */}
+      <nav className="w-1/5 bg-gray-800 text-white flex flex-col space-y-4 p-4">
+        <Button variant={activeTab === "menu" ? "default" : "ghost"} onClick={() => setActiveTab("menu")}>
+          Menu
+        </Button>
+        <Button variant={activeTab === "tables" ? "default" : "ghost"} onClick={() => setActiveTab("tables")}>
+          Tables
+        </Button>
+        <Button variant={activeTab === "bill" ? "default" : "ghost"} onClick={() => setActiveTab("bill")}>
+          Bill
+        </Button>
+      </nav>
+
+      {/* Content Section */}
+      <div className="w-4/5 p-6">
+        {activeTab === "menu" && (
+          <div>
+            <h1>Restaurant Menu</h1>
+            <ul>
+              {menuItems.map((item) => (
+                <div key={item.product_id}>
+                  <h2>{item.product_name}</h2>
+                  <p>{item.description}</p>
+                  <p>Price: ${item.price}</p>
+                </div>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {activeTab === "tables" && (
+          <div>
+            <h1>Tables</h1>
+            <ul>
+              {tables.map((table) => (
+                <div key={table.table_num}>
+                  <h2>Table {table.table_num}</h2>
+                  <p>Status: {table.status}</p>
+                  <p>Seats: {table.seats}</p>
+                </div>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {activeTab === "bill" && (
+          <div>
+            <h1>Bill</h1>
+            <ul>
+              {billItems.map((item) => (
+                <div key={item.id}>
+                  <h2>{item.product_name}</h2>
+                  <p>Price: ${item.price}</p>
+                </div>
+              ))}
+            </ul>
+            <h3>
+              Total: $
+              {billItems.reduce((total, item) => total + item.price, 0)}
+            </h3>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
