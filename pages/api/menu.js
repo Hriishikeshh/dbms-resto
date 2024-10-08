@@ -1,20 +1,17 @@
-import mysql from 'mysql2/promise';
+import connectToDatabase from "../connection";
 
 export default async function handler(req, res) {
-  const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'restaurant',
-    port: 3306
-  });
+  if (req.method === "GET") {
+    const pool = connectToDatabase();
 
-  try {
-    const [rows] = await pool.query('SELECT * FROM menu');
-    res.status(200).json(rows);
-  } catch (error) {
-    res.status(500).json({ error: 'Error fetching menu items' });
-  } finally {
-    await pool.end();
+    try {
+      const [menuItems] = await pool.execute("SELECT * FROM Menu");
+      res.status(200).json(menuItems);
+    } catch (error) {
+      console.error("Error fetching menu items:", error);
+      res.status(500).json({ error: "Error fetching menu items" });
+    }
+  } else {
+    res.status(405).json({ message: "Method not allowed" });
   }
 }
