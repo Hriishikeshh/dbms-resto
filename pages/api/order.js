@@ -38,7 +38,12 @@ export default async function handler(req, res) {
         [order.order_id] // Use the order_id to fetch order items
       );
 
+      const[resettableinfo]=await pool.execute(
+        "update tableinfo set status='available' where table_num=?",
+        [table_num]
+      );
 
+      if(resettableinfo) console.log("Table status resetted");
       console.log("orderItems", orderItems);
       console.log("orders", orders);
 

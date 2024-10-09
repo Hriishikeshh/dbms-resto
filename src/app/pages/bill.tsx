@@ -5,6 +5,8 @@ export default function SelectPhoneNumberAndTableForm() {
   const [tableNumbers, setTableNumbers] = useState<string[]>([]);
   const [selectedPhoneNumber, setSelectedPhoneNumber] = useState("");
   const [selectedTableNumber, setSelectedTableNumber] = useState("");
+  const [isPaid, setIsPaid] = useState(false);
+  const [showPaidButton, setShowPaidButton] = useState(false);
 
   interface OrderItem {
     item_id: number;
@@ -24,7 +26,6 @@ export default function SelectPhoneNumberAndTableForm() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch phone numbers and table numbers from the server
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -70,9 +71,37 @@ export default function SelectPhoneNumberAndTableForm() {
       setOrderItems(data.orderItems || []);
       setOrders(data.orders || []);
       setError(null);
+      setShowPaidButton(true); // Show the paid button when the order is fetched
     } catch (error) {
       console.error("Error sending data:", error);
-      setError("error fetching order details");
+      setError("Error fetching order details.");
+    }
+  };
+
+  const handlePaidClick = async (order: Order) => {
+    try {
+      const response = await fetch("/api/paid-status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          order_id: order.order_id,
+          ph_number: order.ph_number,
+          total: order.total,
+          table_num: order.table_num,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to mark order as paid.");
+      }
+
+      setIsPaid(true);
+      setShowPaidButton(false); // Hide the button after marking as paid
+    } catch (error) {
+      console.error("Error marking as paid:", error);
+      setError("Error updating payment status.");
     }
   };
 
@@ -146,6 +175,15 @@ export default function SelectPhoneNumberAndTableForm() {
               <p>Phone Number: {order.ph_number}</p>
               <p>Table Number: {order.table_num}</p>
               <p>Total Amount: ${order.total.toFixed(2)}</p>
+              {showPaidButton && !isPaid && (
+                <button
+                  className="btn btn-paid text-white rounded-lg p-2 bg-green-500 mt-2"
+                  onClick={() => handlePaidClick(order)}
+                >
+                  Mark as Paid
+                </button>
+              )}
+              {isPaid && <p className="text-green-500">Paid</p>}
             </div>
           ))}
         </div>
