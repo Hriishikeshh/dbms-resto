@@ -4,7 +4,7 @@ export default function connectToDatabase(){
     const pool = mysql.createPool({
         host: 'localhost',
         user: 'root',
-        password: 'prem123',
+        password: 'root',
         database: 'restaurant',
         port: 3306
     });
