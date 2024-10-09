@@ -1,4 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function AddUserAndAllocateTableForm() {
   const [phNumber, setPhNumber] = useState("");
@@ -84,15 +97,7 @@ export default function AddUserAndAllocateTableForm() {
 
       if (response.ok) {
         alert("User added, table allocated, and order placed successfully");
-        setPhNumber("");
-        setName("");
-        setTableNum("");
-        setAllocateSeats("");
-        setAllocateStatus("Available");
-        setOrderId("");
-        setOrderItems([]);
-        setTotalItemsCount(0);
-        setTotalPrice(0);
+        resetForm();
       } else {
         const data = await response.json();
         alert(`Failed to add user, allocate table, and place order: ${data.error}`);
@@ -103,92 +108,143 @@ export default function AddUserAndAllocateTableForm() {
     }
   };
 
+  const resetForm = () => {
+    setPhNumber("");
+    setName("");
+    setTableNum("");
+    setAllocateSeats("");
+    setAllocateStatus("Available");
+    setOrderId("");
+    setOrderItems([]);
+    setTotalItemsCount(0);
+    setTotalPrice(0);
+  };
+
   return (
-    <div>
-      <h1>Add User, Allocate Table, and Place Order</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Phone Number"
-          value={phNumber}
-          onChange={(e) => setPhNumber(e.target.value)}
-          required
-          className="input border-2 border-black"
-        />
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="input border-2 border-black"
-        />
-        <select
-          value={tableNum}
-          onChange={(e) => setTableNum(e.target.value)}
-          required
-          className="input border-2 border-black"
-        >
-          <option value="" disabled>Select a table number</option>
-          {[1, 2, 3, 4, 5].map((num) => (
-            <option key={num} value={num}>
-              Table {num}
-            </option>
-          ))}
-        </select>
+    <div className="max-w-md mx-auto mt-4 px-2">
+      <Card className="shadow-lg rounded-lg bg-white h-auto">
+        <CardHeader className="py-2">
+          <CardTitle className="text-lg font-bold text-primary">Add User, Allocate Table, and Place Order</CardTitle>
+        </CardHeader>
+        <CardContent className="py-2 space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="space-y-1">
+              <Label htmlFor="phNumber" className="text-sm font-medium text-gray-700">Phone Number</Label>
+              <Input
+                type="text"
+                id="phNumber"
+                placeholder="Phone Number"
+                value={phNumber}
+                onChange={(e) => setPhNumber(e.target.value)}
+                required
+                className="text-sm border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-primary focus:border-transparent"
+              />
+            </div>
 
-        <input
-          type="number"
-          placeholder="Number of Seats"
-          value={allocateSeats}
-          onChange={(e) => setAllocateSeats(e.target.value)}
-          required
-          className="input border-2 border-black"
-        />
-        <select
-          value={allocateStatus}
-          onChange={(e) => setAllocateStatus(e.target.value)}
-          required
-          className="input border-2 border-black"
-        >
-          <option value="Available">Available</option>
-          <option value="Occupied">Occupied</option>
-          <option value="Reserved">Reserved</option>
-        </select>
+            <div className="space-y-1">
+              <Label htmlFor="name" className="text-sm font-medium text-gray-700">Name</Label>
+              <Input
+                type="text"
+                id="name"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="text-sm border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-primary focus:border-transparent"
+              />
+            </div>
 
-        <h2>Menu Items</h2>
-        {menuItems.map((item) => (
-          <div key={item.item_id} className="flex justify-between items-center border-b py-2">
-            <span>
-              {item.item_name} - ${item.price.toFixed(2)}
-            </span>
-            <button
-              type="button"
-              onClick={() => addItemToOrder(item)}
-              className="ml-2 p-1 bg-green-500 text-white rounded"
-            >
-              +
-            </button>
-          </div>
-        ))}
+            <div className="space-y-1">
+              <Label htmlFor="tableNum" className="text-sm font-medium text-gray-700">Table Number</Label>
+              <Select value={tableNum} onValueChange={setTableNum}>
+                <SelectTrigger className="text-sm border border-gray-300 rounded-md">
+                  <SelectValue placeholder="Select Table" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Table Number</SelectLabel>
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <SelectItem key={num} value={String(num)}>
+                        Table {num}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
 
-        <h3>Order Summary</h3>
-        <ul>
-          {orderItems.map((orderItem, index) => (
-            <li key={index}>
-              {orderItem.item_name} (Qty: {orderItem.quantity}) - $
-              {(orderItem.price * orderItem.quantity).toFixed(2)}
-            </li>
-          ))}
-        </ul>
+            <div className="space-y-1">
+              <Label htmlFor="allocateSeats" className="text-sm font-medium text-gray-700">Number of Seats</Label>
+              <Input
+                type="number"
+                id="allocateSeats"
+                placeholder="Seats"
+                value={allocateSeats}
+                onChange={(e) => setAllocateSeats(e.target.value)}
+                required
+                className="text-sm border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-primary focus:border-transparent"
+              />
+            </div>
 
-        <div>Total Items: {totalItemsCount}</div>
-        <div>Total Price: ${totalPrice.toFixed(2)}</div>
+            <div className="space-y-1">
+              <Label htmlFor="allocateStatus" className="text-sm font-medium text-gray-700">Status</Label>
+              <Select value={allocateStatus} onValueChange={setAllocateStatus}>
+                <SelectTrigger className="text-sm border border-gray-300 rounded-md">
+                  <SelectValue placeholder="Select Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Status</SelectLabel>
+                    <SelectItem value="Available">Available</SelectItem>
+                    <SelectItem value="Occupied">Occupied</SelectItem>
+                    <SelectItem value="Reserved">Reserved</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
 
-        <button type="submit" className="btn btn-submit text-white rounded-lg p-2 bg-black">
-          Add User, Allocate Table, and Place Order
-        </button>
-      </form>
+            <h2 className="text-lg font-bold mt-2">Menu Items</h2>
+            <div className="border rounded-md p-2">
+              {menuItems.length > 0 ? (
+                menuItems.map((item) => (
+                  <div key={item.item_id} className="flex justify-between items-center border-b py-1">
+                    <span className="text-sm text-gray-800">{item.item_name} - ${item.price.toFixed(2)}</span>
+                    <Button
+                      type="button"
+                      onClick={() => addItemToOrder(item)}
+                      variant="default"
+                      className="ml-2 text-sm transition duration-200 ease-in-out hover:bg-primary hover:text-white"
+                    >
+                      +
+                    </Button>
+                  </div>
+                ))
+              ) : (
+                <p className="text-red-500 text-sm">No menu items available</p>
+              )}
+            </div>
+
+            <h3 className="text-lg font-bold mt-2">Order Summary</h3>
+            <ul className="text-sm space-y-1">
+              {orderItems.map((orderItem, index) => (
+                <li key={index} className="flex justify-between py-1">
+                  <span>{orderItem.item_name} (Qty: {orderItem.quantity})</span>
+                  <span>${(orderItem.price * orderItem.quantity).toFixed(2)}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="text-sm font-semibold">Total Items: {totalItemsCount}</div>
+            <div className="text-sm font-semibold">Total Price: ${totalPrice.toFixed(2)}</div>
+
+            <div className="flex justify-center mt-4">
+              <Button type="submit" className="btn-submit w-full bg-black text-white rounded-lg p-2 hover:bg-primary transition duration-200">
+                Confirm Order
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

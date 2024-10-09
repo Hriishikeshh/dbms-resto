@@ -15,7 +15,7 @@ interface BillProps {
 export default function Bill({ billItems }: BillProps) {
   return (
     <div>
-      <h1>Bill</h1>
+      <h1 >Bill</h1>
       <ul>
         {billItems.map((item) => (
           <div key={item.id}>
