@@ -107,6 +107,20 @@ export default function SelectPhoneNumberAndTableForm() {
 
   return (
     <div>
+
+      <h1 >Bill</h1>
+      <ul>
+        {billItems.map((item) => (
+          <div key={item.id}>
+            <h2>{item.name}</h2>
+            <p>Price: ${item.order_id}</p>
+            <p>Price: ${item.receipt_id}</p>
+          </div>
+        ))}
+      </ul>
+      <h3>
+        Total: ${billItems.reduce((total, item) => total + item.total_amount, 0)}
+      </h3>
       <h1>Select Phone Number and Table Number</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
