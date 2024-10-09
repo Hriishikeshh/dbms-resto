@@ -245,6 +245,92 @@ export default function AddUserAndAllocateTableForm() {
           </form>
         </CardContent>
       </Card>
+    <div>
+      <h1>Add User, Allocate Table, and Place Order</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Phone Number"
+          value={phNumber}
+          onChange={(e) => setPhNumber(e.target.value)}
+          required
+          className="input border-2 border-black"
+        />
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          className="input border-2 border-black"
+        />
+        <select
+          value={tableNum}
+          onChange={(e) => setTableNum(e.target.value)}
+          required
+          className="input border-2 border-black"
+        >
+          <option value="" disabled>Select a table number</option>
+          {[1, 2, 3, 4, 5].map((num) => (
+            <option key={num} value={num}>
+              Table {num}
+            </option>
+          ))}
+        </select>
+
+        <input
+          type="number"
+          placeholder="Number of Seats"
+          value={allocateSeats}
+          onChange={(e) => setAllocateSeats(e.target.value)}
+          required
+          className="input border-2 border-black"
+        />
+        <select
+          value={allocateStatus}
+          onChange={(e) => setAllocateStatus(e.target.value)}
+          required
+          className="input border-2 border-black"
+        >
+          <option value="Available">Available</option>
+          <option value="Occupied">Occupied</option>
+          <option value="Reserved">Reserved</option>
+        </select>
+
+        <h2>Menu Items</h2>
+        {menuItems.map((item) => (
+          <div key={item.item_id} className="flex justify-between items-center border-b py-2">
+            <span>
+              {item.item_name} - ${item.price.toFixed(2)}
+            </span>
+            <button
+              type="button"
+              onClick={() => addItemToOrder(item)}
+              className="ml-2 p-1 bg-green-500 text-white rounded"
+            >
+              +
+            </button>
+          </div>
+        ))}
+
+        <h3>Order Summary</h3>
+        <ul>
+          {orderItems.map((orderItem, index) => (
+            <li key={index}>
+              {orderItem.item_name} (Qty: {orderItem.quantity}) - $
+              {(orderItem.price * orderItem.quantity).toFixed(2)}
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden">Total Items: {totalItemsCount}</div>
+        <div className="hidden">Total Price: ${totalPrice.toFixed(2)}</div>
+
+        <button type="submit" className="btn btn-submit text-white rounded-lg p-2 bg-black">
+          Add User, Allocate Table, and Place Order
+        </button>
+      </form>
+
     </div>
   );
 }
