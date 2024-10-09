@@ -182,8 +182,8 @@ export default function AddUserAndAllocateTableForm() {
           ))}
         </ul>
 
-        <div>Total Items: {totalItemsCount}</div>
-        <div>Total Price: ${totalPrice.toFixed(2)}</div>
+        <div className="hidden">Total Items: {totalItemsCount}</div>
+        <div className="hidden">Total Price: ${totalPrice.toFixed(2)}</div>
 
         <button type="submit" className="btn btn-submit text-white rounded-lg p-2 bg-black">
           Add User, Allocate Table, and Place Order
