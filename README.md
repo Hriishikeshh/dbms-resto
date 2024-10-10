@@ -1,38 +1,49 @@
-# Restaurant Management System
+# Python Project
 
-This is a Restaurant Management System created to gain hands-on experience with Next.js and MySQL. The system manages various aspects of a restaurant, including user management and billing.
-
-## Technologies Used
-- **Next.js**: Frontend framework for server-side rendering and building React applications.
-- **MySQL**: Relational database for data storage.
-- **Tailwind CSS**: Utility-first CSS framework for styling.
+This is a Python project that includes various data files and a virtual environment setup.
 
 ## Prerequisites
-- Node.js (version 16 or later)
-- MySQL server
+- Python (version 3.8 or later)
+- Virtualenv
 
 ## Getting Started
 
 Follow these steps to set up the project on your local machine:
 
-##
-git clone <repository-url>
-cd <repository-folder>
+1. Clone the repository:
+    ```sh
+    git clone <repository-url>
+    cd <repository-folder>
+    ```
 
+2. Create a virtual environment:
+    ```sh
+    python -m venv venv
+    ```
 
-npm install
+3. Activate the virtual environment:
+    - On Windows:
+        ```sh
+        .\venv\Scripts\activate
+        ```
+    - On macOS/Linux:
+        ```sh
+        source venv/bin/activate
+        ```
 
-download MySQL in your pc
+4. Install the required packages:
+    ```sh
+    pip install -r requirements.txt
+    ```
 
-Open connection.js located in the /pages folder.
+5. Run your Python script:
+    ```sh
+    python test.py
+    ```
 
-Add your MySQL credentials:
+## Data Files
+- : Contains HR analytics data.
+- `Road Accident Data.xlsx`: Contains road accident data.
 
-const connection = mysql.createConnection({
-  host: 'your-database-host',
-  user: 'your-username',
-  password: 'your-password',
-  database: 'your-database-name'
-});
-
-npm run dev
+## Project Files
+- : Main script to run the project.
