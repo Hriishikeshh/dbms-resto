@@ -1,4 +1,7 @@
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useState, useEffect } from "react";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"; // Replace with the actual library or path
+import { Button } from "@/components/ui/button";
 
 export default function SelectPhoneNumberAndTableForm() {
   const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
@@ -15,7 +18,7 @@ export default function SelectPhoneNumberAndTableForm() {
   }
 
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-  
+
   interface Order {
     order_id: number;
     ph_number: string;
@@ -47,7 +50,7 @@ export default function SelectPhoneNumberAndTableForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const formData = {
       ph_number: selectedPhoneNumber,
       table_num: selectedTableNumber,
@@ -106,34 +109,19 @@ export default function SelectPhoneNumberAndTableForm() {
   };
 
   return (
-    <div>
-
+    <div className="flex items-center justify-center mt-20 gap-6">
       <h1 >Bill</h1>
-      {/* Uncomment and define billItems if needed */}
-      {/* <ul>
-        {billItems.map((item) => (
-          <div key={item.id}>
-            <h2>{item.name}</h2>
-            <p>Price: ${item.order_id}</p>
-            <p>Price: ${item.receipt_id}</p>
-          </div>
-        ))}
-      </ul>
-      <h3>
-        Total: ${billItems.reduce((total, item) => total + item.total_amount, 0)}
-      </h3> */}
-      <h1>Select Phone Number and Table Number</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="phNumber">Select Phone Number:</label>
+        <div className="flex text-black">
+          <label className="mx-4" htmlFor="phNumber">Select Phone Number:</label>
           <select
             id="phNumber"
             value={selectedPhoneNumber}
             onChange={(e) => setSelectedPhoneNumber(e.target.value)}
             required
-            className="input border-2 border-black"
+            className="input border-2 border-black text-black"
           >
-            <option value="" disabled>Select a phone number</option>
+            <option value="" disabled>Select</option>
             {phoneNumbers.map((ph, index) => (
               <option key={index} value={ph}>
                 {ph}
@@ -142,16 +130,16 @@ export default function SelectPhoneNumberAndTableForm() {
           </select>
         </div>
 
-        <div>
-          <label htmlFor="tableNumber">Select Table Number:</label>
+        <div className="text-black">
+          <label className="mx-4" htmlFor="tableNumber">Select Table Number:</label>
           <select
             id="tableNumber"
             value={selectedTableNumber}
             onChange={(e) => setSelectedTableNumber(e.target.value)}
             required
-            className="input border-2 border-black"
+            className="input border-2 border-black text-black"
           >
-            <option value="" disabled>Select a table number</option>
+            <option value="" disabled>Select</option>
             {tableNumbers.map((table, index) => (
               <option key={index} value={table}>
                 {table}
@@ -160,46 +148,74 @@ export default function SelectPhoneNumberAndTableForm() {
           </select>
         </div>
 
-        <button type="submit" className="btn btn-submit text-white rounded-lg p-2 bg-black">
+        <button type="submit" className="btn btn-submit text-white rounded-lg p-2 bg-black mx-4">
           Submit
         </button>
       </form>
 
+
       {/* Display Order Items */}
+
       {error && <p className="text-red-500 mt-4">{error}</p>}
+
       {!error && orderItems.length > 0 && (
-        <div className="mt-4">
-          <h2>Order Items</h2>
-          <ul className="list-disc ml-4">
-            {orderItems.map((item, index) => (
-              <li key={index}>
-                Item ID: {item.item_id}, Quantity: {item.quantity}, Price: ${item.price.toFixed(2)}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Card className="bg-white text-black shadow-md w-2/5 max-w-2xl h-auto">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">Order Items</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table className="w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Item ID</TableHead>
+                  <TableHead>Quantity</TableHead>
+                  <TableHead>Price</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {orderItems.map((item, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{item.item_id}</TableCell>
+                    <TableCell>{item.quantity}</TableCell>
+                    <TableCell>${item.price.toFixed(2)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       )}
-      
+
+
       {/* Display Total Order Information */}
+      {error && <p className="text-red-500 mt-4">{error}</p>}
+
       {!error && orders.length > 0 && (
-        <div className="mt-4 text-black">
-          <h2>Total Order Information</h2>
+        <div className="flex flex-col space-y-4">
+          <h2 className="text-xl font-bold text-gray-800">Total Order Information</h2>
           {orders.map((order) => (
-            <div key={order.order_id}>
-              <p>Order ID: {order.order_id}</p>
-              <p>Phone Number: {order.ph_number}</p>
-              <p>Table Number: {order.table_num}</p>
-              <p>Total Amount: ${order.total.toFixed(2)}</p>
-              {showPaidButton && !isPaid && (
-                <button
-                  className="btn btn-paid text-white rounded-lg p-2 bg-green-500 mt-2"
-                  onClick={() => handlePaidClick(order)}
-                >
-                  Mark as Paid
-                </button>
-              )}
-              {isPaid && <p className="text-green-500">Paid</p>}
-            </div>
+            <Card key={order.order_id} className="bg-white text-black shadow-md w-6/8 max-w-2xl h-auto">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">Order ID: {order.order_id}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm">Phone Number: {order.ph_number}</p>
+                <p className="text-sm">Table Number: {order.table_num}</p>
+                <p className="text-sm">Total Amount: ${order.total.toFixed(2)}</p>
+              </CardContent>
+              <CardFooter>
+                {showPaidButton && !isPaid && (
+                  <Button
+                    variant="success"
+                    className="bg-green-500 text-white hover:bg-green-600"
+                    onClick={() => handlePaidClick(order)}
+                  >
+                    Mark as Paid
+                  </Button>
+                )}
+                {isPaid && <p className="text-green-500">Paid</p>}
+              </CardFooter>
+            </Card>
           ))}
         </div>
       )}

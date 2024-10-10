@@ -24,10 +24,10 @@ export default async function handler(req, res) {
 
       // Step 4: Insert into Orders table
       const [orderResult] = await pool.execute(
-        "INSERT INTO Orders (ph_number,table_num,total) VALUES (?,?,?)",
-        [ph_number,table_num,total_price]
-      );
-
+        "INSERT INTO Orders (ph_number, table_num, total, date_time) VALUES (?, ?, ?, ?)",
+        [ph_number, table_num, total_price, new Date()] // Use new Date() here
+    );
+    
       // Get the order_id of the newly inserted order
       const orderId = orderResult.insertId;
 

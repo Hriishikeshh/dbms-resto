@@ -25,6 +25,7 @@ CREATE TABLE Orders (
     ph_number VARCHAR(15),
     table_num int,
     total int,
+    date_time datetime,
     FOREIGN KEY (ph_number) REFERENCES Users(ph_number)
 );
 
