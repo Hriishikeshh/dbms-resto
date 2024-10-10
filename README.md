@@ -15,11 +15,10 @@ This is a Restaurant Management System created to gain hands-on experience with 
 
 Follow these steps to set up the project on your local machine:
 
-### 1. Clone the Repository
-```bash
+##
 git clone <repository-url>
-
 cd <repository-folder>
+
 
 npm install
 
