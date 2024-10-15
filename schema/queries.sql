@@ -58,6 +58,10 @@ VALUES (104, 'Chicken Alfredo Pasta', 300.00, 'Creamy pasta with chicken and Alf
 -- retrieve bill
 select*from Orders where ph_number=9021201303 and table_num=3;
 
+update tableinfo set status='available' where table_num=?
+
+update users set payment_status='paid' where ph_number=? and table_num=?
+
 -- Retrieve ordered items
 SELECT o.order_id,oi.item_id,oi.quantity,m.price
 FROM OrderItems oi
